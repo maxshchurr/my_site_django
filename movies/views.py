@@ -1,0 +1,9 @@
+from django.shortcuts import render
+from django.apps import AppConfig
+from django.http import HttpResponse
+
+
+def home_page(request):
+    return HttpResponse("Hello World!")
+
+
