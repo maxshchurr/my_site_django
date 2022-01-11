@@ -1,10 +1,6 @@
-
-
-
 import time
 
 from django.http import HttpResponse
-
 
 
 class TimeOfResponseMiddleware:
@@ -13,5 +9,6 @@ class TimeOfResponseMiddleware:
 
     def __call__(self, request):
         timestamp = time.monotonic()
+        response = self.get_response(request)
 
-        return HttpResponse(f'X-Request-Timing: {time.monotonic() - timestamp}')
+        return HttpResponse(f'X-Request-Timing: {time.monotonic() - timestamp:.3f} ms')
