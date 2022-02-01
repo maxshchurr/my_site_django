@@ -11,8 +11,6 @@ from .models import Movie, Vote
 
 
 
-
-
 class MovieList(ListView, ModelFormMixin):
     model = Movie
     form_class = MovieForm
