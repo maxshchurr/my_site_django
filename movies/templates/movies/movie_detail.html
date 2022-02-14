@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MovieList</title>
+    <style>
+     body {
+          color: #1f1f14;
+          background-color:#b9b992;
+      }
+      h1,h2,footer{
+          text-align: center;
+          color: white;
+          padding: 5px;
+          background-color: #8888;
+      }
+    </style>
+</head>
+<body>
+    <h1>Movie</h1>
+    <ul>
+      <li>Title   - {{ movie.title }} - {{ movie.year }}</li>
+      <li>Plot    - {{ movie.plot }}</li>
+      <li>Rating  - {{ movie.rating }}</li>
+      <li>Runtime - {{ movie.runtime }}</li>
+      <li>Actors  - {{ movie.actors }}</li>
+    </ul>
+
+    <div>
+        <h2>
+            Score {{ object.score|default_if_none:"Not scored" }}
+        </h2>
+    </div>
+
+    <div>
+        <form
+            method="post"
+            action="{{ vote_form_url }}" >
+            {% csrf_token %}
+            {{ vote_form.as_p }}
+            <button
+                class="btn btn-primary" type="submit" >
+                Vote
+            </button>
+        </form>
+    </div>
+<footer>
+    <p>END</p>
+</footer>
+</body>
+</html>
