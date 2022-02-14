@@ -1,9 +1,9 @@
-
 from uuid import uuid4
 
 from django.db import models
 # from django.conf import settings
 from django.db.models.aggregates import Sum
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class Actor(models.Model):
@@ -34,13 +34,21 @@ class MovieManager(models.Manager):
         qs = qs.annotate(vote_sum=Sum("vote__value"))
         return qs
 
+    @staticmethod
+    def api_get(pk=None):
+        from rest_framework.exceptions import ValidationError
+        try:
+            queryset = Movie.objects.get(pk=pk)
+        except ObjectDoesNotExist as e:
+            raise ValidationError
+        return queryset
 
 
 class Movie(models.Model):
-    NOT_RATED = 0
-    RATED_G = 1
-    RATED_PG = 2
-    RATED_R = 3
+    NOT_RATED = "NR - Not Rated"
+    RATED_G = "G - General Audiences"
+    RATED_PG = "PG - Parental Guidance"
+    RATED_R = "R - Restricted"
     RATINGS = (
         (NOT_RATED, "NR - Not Rated"),
         (RATED_G, "G - General Audiences"),
@@ -50,8 +58,8 @@ class Movie(models.Model):
 
     title = models.CharField(max_length=100)
     plot = models.TextField()
-    year = models.PositiveSmallIntegerField()
-    rating = models.IntegerField(choices=RATINGS, default=NOT_RATED)
+    year = models.PositiveSmallIntegerField(default=2020)
+    rating = models.CharField(choices=RATINGS, default=NOT_RATED, max_length=100)
     runtime = models.PositiveIntegerField(default=100)
     actors = models.ManyToManyField(Actor, blank=True)
     objects = MovieManager()
@@ -63,8 +71,9 @@ class Movie(models.Model):
         return "{} ({})".format(self.title, self.year)
 
 
-def movie_directory_path_with_uuid(instance, filename):
-    return "{}/{}.{}".format(instance.movie_id, uuid4(), filename.split(".")[-1])
+# def movie_directory_path_with_uuid(instance, filename):
+#     return "{}/{}.{}".format(instance.movie_id, uuid4(), filename.split(".")[-1])
+
 
 
 class VoteManager(models.Manager):
@@ -74,12 +83,23 @@ class VoteManager(models.Manager):
         except Vote.DoesNotExist:
             return Vote(movie=movie)
 
+    @staticmethod
+    def api_get(pk=None):
+        from rest_framework.exceptions import ValidationError
+        try:
+            queryset = Vote.objects.get(pk=pk)
+        except Movie.DoesNotExist as e:
+            raise ValidationError
+        return queryset
+
 
 class Vote(models.Model):
     value = models.IntegerField(default=0)
     # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, related_name='vote', on_delete=models.CASCADE)
 
     objects = VoteManager()
 
+    def __str__(self):
+        return str(self.value)
 

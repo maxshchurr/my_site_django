@@ -22,10 +22,10 @@ from movies.urls import *
 from django.urls import path, include
 
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('movies.urls')),
+    path('api/v1/', include('movie_api.urls', 'movie_api')),
     path('accounts/', include('django.contrib.auth.urls')),
 
 
@@ -33,5 +33,7 @@ urlpatterns = [
 ]
 
 #urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
 
 
