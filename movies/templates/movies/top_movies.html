@@ -1,0 +1,17 @@
+{% extends "movies_base.html" %}
+{% block content %}
+    <h1>Top Movies</h1>
+    <ul>
+    {% for movie in object_list %}
+        <li>
+            <a href="{% url 'movie-detail' pk=movie.id %}" >
+               {{ movie.title }} - {{ movie.year }}
+            </a>
+        </li>
+    {% empty %}
+        <li>empty</li>
+    {% endfor %}
+    </ul>
+
+
+{% endblock content %}
