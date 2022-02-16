@@ -25,7 +25,7 @@ class MovieManager(models.Manager):
         qs = self.get_queryset()
         qs = qs.annotate(vote_sum=Sum("vote__value"))
         qs = qs.exclude(vote_sum=None)
-        qs = qs.order_by("-vote_sum")
+        qs = qs.order_by("-vote_sum", "-year")
         qs = qs[:limit]
         return qs
 
@@ -64,8 +64,12 @@ class Movie(models.Model):
     actors = models.ManyToManyField(Actor, blank=True)
     objects = MovieManager()
 
+    # class Meta:
+    #     ordering = ["-year", "title"]
+
     class Meta:
-        ordering = ["-year", "title"]
+        ordering = ["-id", "title"]
+
 
     def __str__(self):
         return "{} ({})".format(self.title, self.year)
