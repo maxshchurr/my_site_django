@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log in</title>
+    <style>
+     body {
+
+          background-color:#34495E;
+
+      }
+      h1,h2,footer,p{
+
+          text-align: left;
+          color: white;
+          padding: 5px;
+          background-color: #8888;
+
+      }
+
+      .button {
+
+  text-align: center;
+  padding: 20px;
+
+      }
+    </style>
+</head>
+<body>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in login_form %}
+            <p>
+                {{field.label_tag}}
+                {{field}}
+
+                {% if field.help_text %}
+                    <small style="color: grey;">{{field.help_text}}</small>
+                {% endif %}
+            </p>
+            {% endfor %}
+
+            {% for field in login_form %}
+                {% for error in field.errors %}
+                    <p style="color: yellow;">{{error}}</p>
+
+                {% endfor %}
+            {% endfor %}
+
+            {% if login_form.non_field_errors %}
+                <div style="color:#D6BD0F;">
+                    <p>{{login_form.non_field_errors}}</p>
+                </div>
+            {% endif %}
+            <div class = 'button'>
+            <button
+                    class="btn btn-primary" type="submit">
+
+                    Log in
+
+            </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
