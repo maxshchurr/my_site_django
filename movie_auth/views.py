@@ -5,6 +5,7 @@ from .forms import RegistrationForm, LoginForm
 from . models import Site_User
 
 
+
 def sign_up(request):
     ctx = {}
     if request.POST:
